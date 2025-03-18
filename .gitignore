@@ -57,3 +57,5 @@ Thumbs.db           # Windows
 
 # Производственные файлы
 /dist
+
+.husky/_/

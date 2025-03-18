@@ -11,11 +11,19 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+// Базовая конфигурация для всех TS/TSX файлов
+export default [
+  // Первый объект: Next.js и TypeScript правила
   {
-    files: ['**/*.ts', '**/*.tsx'], // Проверяем только TS/TSX файлы
-    ...compat.extends('next/core-web-vitals', 'next/typescript'),
+    files: ['**/*.ts', '**/*.tsx'],
+    ...compat.extends('next/core-web-vitals', 'next/typescript')[0],
+    settings: {
+      react: {
+        version: 'detect', // Автоматически определяет версию React
+      },
+    },
   },
+  // Второй объект: Prettier интеграция
   {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: { prettier: prettierPlugin },
@@ -23,7 +31,6 @@ const eslintConfig = [
       'prettier/prettier': 'error',
     },
   },
+  // Третий объект: Отключаем конфликтующие правила
   prettierConfig,
 ];
-
-export default eslintConfig;
