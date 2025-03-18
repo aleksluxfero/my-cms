@@ -1,13 +1,11 @@
-import { neon } from '@neondatabase/serverless';
+import prisma from '@/lib/prisma';
 
 export default async function Home() {
-  const sql = neon(process.env.DATABASE_URL!);
-  const result = await sql('SELECT version();'); // Простой запрос для проверки
-
+  const users = await prisma.user.findMany();
   return (
     <div>
-      <h1>CMS Database Test</h1>
-      <pre>{JSON.stringify(result, null, 2)}</pre>
+      <h1>Users</h1>
+      <pre>{JSON.stringify(users, null, 2)}</pre>
     </div>
   );
 }

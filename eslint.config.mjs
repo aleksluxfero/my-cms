@@ -2,20 +2,18 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
-import reactHooks from 'eslint-plugin-react-hooks'; // Плагин для React Hooks
-import tsEslint from '@typescript-eslint/eslint-plugin'; // Плагин для TypeScript
-import tsParser from '@typescript-eslint/parser'; // Парсер для TypeScript
-import nextPlugin from '@next/eslint-plugin-next'; // Плагин для Next.js
+import reactHooks from 'eslint-plugin-react-hooks';
+import tsEslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import nextPlugin from '@next/eslint-plugin-next';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default [
-  // Глобальные исключения
   {
     ignores: ['.next/**', 'node_modules/**', 'dist/**', '.vercel/**'],
   },
-  // Основная конфигурация для TS/TSX
   {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
@@ -36,21 +34,20 @@ export default [
       react: {
         version: 'detect',
       },
+      next: {
+        rootDir: 'app', // Указываем App Router
+      },
     },
     rules: {
-      // React Hooks
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react/react-in-jsx-scope': 'off', // Не нужен в Next.js
-      // TypeScript
+      'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-use-before-define': 'error',
-      // Next.js
+      '@next/next/no-html-link-for-pages': 'off', // Отключаем для App Router
       '@next/next/no-img-element': 'warn',
-      // Prettier
       'prettier/prettier': 'error',
     },
   },
-  // Отключаем конфликтующие правила
   prettierConfig,
 ];
