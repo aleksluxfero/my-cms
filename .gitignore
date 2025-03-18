@@ -59,3 +59,4 @@ Thumbs.db           # Windows
 /dist
 
 .husky/_/
+.eslintcache

@@ -1,36 +1,56 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
+import reactHooks from 'eslint-plugin-react-hooks'; // Плагин для React Hooks
+import tsEslint from '@typescript-eslint/eslint-plugin'; // Плагин для TypeScript
+import tsParser from '@typescript-eslint/parser'; // Парсер для TypeScript
+import nextPlugin from '@next/eslint-plugin-next'; // Плагин для Next.js
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-// Базовая конфигурация для всех TS/TSX файлов
 export default [
-  // Первый объект: Next.js и TypeScript правила
+  // Глобальные исключения
+  {
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', '.vercel/**'],
+  },
+  // Основная конфигурация для TS/TSX
   {
     files: ['**/*.ts', '**/*.tsx'],
-    ...compat.extends('next/core-web-vitals', 'next/typescript')[0],
-    settings: {
-      react: {
-        version: 'detect', // Автоматически определяет версию React
+    plugins: {
+      'react-hooks': reactHooks,
+      '@typescript-eslint': tsEslint,
+      '@next/next': nextPlugin,
+      prettier: prettierPlugin,
+    },
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        project: './tsconfig.json',
       },
     },
-  },
-  // Второй объект: Prettier интеграция
-  {
-    files: ['**/*.ts', '**/*.tsx'],
-    plugins: { prettier: prettierPlugin },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     rules: {
+      // React Hooks
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react/react-in-jsx-scope': 'off', // Не нужен в Next.js
+      // TypeScript
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-use-before-define': 'error',
+      // Next.js
+      '@next/next/no-img-element': 'warn',
+      // Prettier
       'prettier/prettier': 'error',
     },
   },
-  // Третий объект: Отключаем конфликтующие правила
+  // Отключаем конфликтующие правила
   prettierConfig,
 ];

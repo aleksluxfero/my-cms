@@ -1,3 +1,8 @@
 export default function Home() {
-  return <div>hello world</div>;
+  const unused = 1; // Неиспользуемая переменная
+  return (
+    <div>
+      Hello World <a href="/about">Link</a>
+    </div>
+  );
 }
